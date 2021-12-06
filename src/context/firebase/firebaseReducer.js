@@ -1,8 +1,10 @@
-import {ADD_NOTE, DELETE_NOTE, FETCH_NOTES, SHOW_LOADER} from "../types";
+import {ADD_NOTE, DELETE_NOTE, FETCH_NOTES, SHOW_LOADER, HIDE_LOADER} from "../types";
 
 const handlers = {
 
     [SHOW_LOADER]: state => ({...state, loading: true}),
+
+    [HIDE_LOADER]: state => ({...state, loading: false}),
 
     [ADD_NOTE]: (state, {payload}) => ({
         ...state,
@@ -12,7 +14,6 @@ const handlers = {
     [FETCH_NOTES]: (state, {payload}) => ({
         ...state,
         notes: payload,
-        loading: false
     }),
 
     [DELETE_NOTE]: (state, {payload}) => ({

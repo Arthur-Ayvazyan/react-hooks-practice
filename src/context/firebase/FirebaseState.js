@@ -2,7 +2,7 @@ import {FirebaseContext} from "./firebaseContext";
 import {useReducer} from "react";
 import {firebaseReducer} from "./firebaseReducer";
 import axios from "axios";
-import {ADD_NOTE, DELETE_NOTE, FETCH_NOTES, SHOW_LOADER} from "../types";
+import {ADD_NOTE, DELETE_NOTE, FETCH_NOTES, SHOW_LOADER, HIDE_LOADER} from "../types";
 
 const url = process.env.REACT_APP_DB_URL;
 
@@ -14,21 +14,28 @@ const FirebaseState = ({children}) => {
     const [state, dispatch] = useReducer(firebaseReducer, initialState);
 
     const showLoader = () => dispatch({type: SHOW_LOADER});
+
+    const hideLoader = () => dispatch({type: HIDE_LOADER});
+
     const fetchNotes = async () => {
         showLoader();
-        try{
-            const result = await axios.get(`${url}/notes.json`);
-            const payload = Object.keys(result.data).map((key) => {
-                return {
-                    ...result.data[key],
-                    id: key
-                }
-            });
-            dispatch({type: FETCH_NOTES, payload})
-        } catch (e) {
-            throw new Error(e)
+
+        const result = await axios.get(`${url}/notes.json`);
+
+        if (result.data === null) {
+            hideLoader()
+            return
         }
 
+        const payload = Object.keys(result.data).map((key) => {
+            return {
+                ...result.data[key],
+                id: key
+            }
+        });
+
+        dispatch({type: FETCH_NOTES, payload});
+        hideLoader();
     };
 
     const addNote = async (title) => {
