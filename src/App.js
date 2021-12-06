@@ -23,7 +23,8 @@ const App = () => {
                 </BrowserRouter>
             </AlertState>
         </FirebaseState>
-    );
+    )
+
 };
 
 export default App;

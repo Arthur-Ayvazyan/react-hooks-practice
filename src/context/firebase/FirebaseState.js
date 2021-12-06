@@ -16,15 +16,19 @@ const FirebaseState = ({children}) => {
     const showLoader = () => dispatch({type: SHOW_LOADER});
     const fetchNotes = async () => {
         showLoader();
-        const result = await axios.get(`${url}/notes.json`);
-        console.log('fetchnote', result.data);
-        const payload = Object.keys(result.data).map((key) => {
-            return {
-                ...result.data[key],
-                id: key
-            }
-        });
-        dispatch({type: FETCH_NOTES, payload})
+        try{
+            const result = await axios.get(`${url}/notes.json`);
+            const payload = Object.keys(result.data).map((key) => {
+                return {
+                    ...result.data[key],
+                    id: key
+                }
+            });
+            dispatch({type: FETCH_NOTES, payload})
+        } catch (e) {
+            throw new Error(e)
+        }
+
     };
 
     const addNote = async (title) => {
@@ -33,7 +37,6 @@ const FirebaseState = ({children}) => {
         };
         try {
             const result = await axios.post(`${url}/notes.json`, note);
-            console.log('addnote', result);
             const payload = {
                 ...note,
                 id: result.data.name
@@ -45,8 +48,7 @@ const FirebaseState = ({children}) => {
     }
 
     const deleteNote = async (id) => {
-        const result = await axios.delete(`${url}/notes/${id}.json`);
-        console.log('deletenote', result);
+        await axios.delete(`${url}/notes/${id}.json`);
         dispatch({
             type: DELETE_NOTE,
             payload: id

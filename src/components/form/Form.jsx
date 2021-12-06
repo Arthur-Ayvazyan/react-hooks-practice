@@ -32,7 +32,7 @@ const Form = () => {
                     value={value}
                     onChange={e => setValue(e.target.value)}
                     className={'form-control'}
-                    placeholder={'Complete name of task'}
+                    placeholder={`I'm going to...`}
                     type={'text'}
                 />
                 <div className="input-group-append">
